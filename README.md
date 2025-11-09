@@ -198,7 +198,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Your Name - [Your GitHub](https://github.com/yourusername)
+Your Name - [Abhishek2026-23](https://github.com/Abhishek2026-23)
 
 ## 🙏 Acknowledgments
 
@@ -209,14 +209,14 @@ Your Name - [Your GitHub](https://github.com/yourusername)
 
 ## 📧 Contact
 
-For questions or support, please contact: your.email@example.com
+For questions or support, please contact: abhisinghpatel23404@mpgi.edu.in
 
 ## 🔗 Links
 
 - [Live Demo](https://your-app-url.com) (Coming soon)
-- [Documentation](https://github.com/yourusername/ai-teaching-assistant/wiki)
-- [Report Bug](https://github.com/yourusername/ai-teaching-assistant/issues)
-- [Request Feature](https://github.com/yourusername/ai-teaching-assistant/issues)
+- [Documentation](https://github.com/Abhishek2026-23/ai-teaching-assistant/wiki)
+- [Report Bug](https://github.com//ai-teachingAbhishek2026-23-assistant/issues)
+- [Request Feature](https://github.com/Abhishek2026-23/ai-teaching-assistant/issues)
 
 ---
 
