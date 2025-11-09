@@ -27,11 +27,8 @@ services:
         sync: false
 
   # Frontend Service
-  - type: web
+  - type: static
     name: ai-teaching-assistant-frontend
-    env: static
-    region: oregon
-    plan: free
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     routes:
