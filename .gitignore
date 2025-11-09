@@ -10,3 +10,14 @@ coverage/
 .cache/
 temp/
 recordings/
+
+# Deployment guides (for personal use only)
+DEPLOYMENT_*.md
+DEPLOY_*.md
+START_HERE_*.md
+QUICK_DEPLOY_*.md
+🚀_START_DEPLOYMENT_HERE.md
+deploy-commands.txt
+Procfile
+render.yaml
+vercel.json
