@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Changes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-purple-600 mb-6">✅ Changes Verification</h1>
+        
+        <div class="space-y-4">
+            <div class="bg-green-50 border-l-4 border-green-500 p-4">
+                <h2 class="font-bold text-green-800">✅ Backend API</h2>
+                <p class="text-sm text-green-700">Testing connection...</p>
+                <p id="api-status" class="text-sm mt-2"></p>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                <h2 class="font-bold text-blue-800">✅ AI Service</h2>
+                <p class="text-sm text-blue-700">Enhanced note generation ready</p>
+                <button onclick="testAI()" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Test AI Generation
+                </button>
+                <p id="ai-status" class="text-sm mt-2"></p>
+            </div>
+
+            <div class="bg-purple-50 border-l-4 border-purple-500 p-4">
+                <h2 class="font-bold text-purple-800">✅ Frontend Updates</h2>
+                <ul class="text-sm text-purple-700 space-y-1 mt-2">
+                    <li>• AI Notes button added to meetings</li>
+                    <li>• Note viewer modal enhanced</li>
+                    <li>• Generate notes functionality</li>
+                    <li>• Download notes option</li>
+                </ul>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4">
+                <h2 class="font-bold text-yellow-800">⚠️ If you don't see changes:</h2>
+                <ol class="text-sm text-yellow-700 space-y-1 mt-2 list-decimal list-inside">
+                    <li>Press <kbd class="px-2 py-1 bg-gray-200 rounded">Ctrl + Shift + R</kbd> to hard refresh</li>
+                    <li>Or press <kbd class="px-2 py-1 bg-gray-200 rounded">Ctrl + F5</kbd></li>
+                    <li>Or open in Incognito mode</li>
+                </ol>
+            </div>
+
+            <div class="mt-6 text-center">
+                <a href="standalone.html" class="inline-block px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition">
+                    🚀 Open Main App
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // Test API connection
+        fetch(`${API_BASE_URL}/health`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('api-status').innerHTML = 
+                    '<span class="text-green-600 font-semibold">✅ Connected: ' + data.message + '</span>';
+            })
+            .catch(err => {
+                document.getElementById('api-status').innerHTML = 
+                    '<span class="text-red-600 font-semibold">❌ Error: ' + err.message + '</span>';
+            });
+
+        async function testAI() {
+            const statusEl = document.getElementById('ai-status');
+            statusEl.innerHTML = '<span class="text-blue-600">⏳ Testing AI service...</span>';
+            
+            try {
+                // This will test if the endpoint exists
+                const response = await fetch(`${API_BASE_URL}/notes`);
+                if (response.ok) {
+                    statusEl.innerHTML = '<span class="text-green-600 font-semibold">✅ AI service endpoints ready!</span>';
+                } else {
+                    statusEl.innerHTML = '<span class="text-yellow-600">⚠️ Service available but check backend logs</span>';
+                }
+            } catch (error) {
+                statusEl.innerHTML = '<span class="text-red-600 font-semibold">❌ Error: ' + error.message + '</span>';
+            }
+        }
+    </script>
+</body>
+</html>

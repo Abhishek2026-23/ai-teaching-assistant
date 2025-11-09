@@ -1,0 +1,211 @@
+# 🚀 Quick Deployment Commands
+
+# Copy and paste these commands one by one
+
+# ============================================
+# STEP 1: Generate JWT Secret
+# ============================================
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# Save the output as JWT_SECRET
+
+
+# ============================================
+# STEP 2: Initialize Git and Push to GitHub
+# ============================================
+
+# Initialize git repository
+git init
+
+# Add all files
+git add .
+
+# Commit files
+git commit -m "Initial commit - AI Teaching Assistant ready for deployment"
+
+# Add remote (replace YOUR_USERNAME with your GitHub username)
+git remote add origin https://github.com/YOUR_USERNAME/ai-teaching-assistant.git
+
+# Set main branch
+git branch -M main
+
+# Push to GitHub
+git push -u origin main
+
+
+# ============================================
+# STEP 3: After Deployment - Update CORS
+# ============================================
+
+# After you get your frontend URL from Render, update backend/server.js
+# Then run these commands:
+
+git add backend/server.js
+git commit -m "Update CORS for production"
+git push
+
+
+# ============================================
+# ENVIRONMENT VARIABLES TO SET IN RENDER
+# ============================================
+
+# Backend Service:
+# ----------------
+# MONGODB_URI = mongodb+srv://username:password@cluster.mongodb.net/ai-teaching-assistant
+# JWT_SECRET = (output from Step 1)
+# OPENAI_API_KEY = sk-your-openai-key
+# EMAIL_USER = your-email@gmail.com
+# EMAIL_PASS = your-gmail-app-password
+# FRONTEND_URL = (your frontend URL after it deploys)
+
+# Frontend Service:
+# -----------------
+# VITE_API_URL = (your backend URL + /api after it deploys)
+
+
+# ============================================
+# TESTING COMMANDS
+# ============================================
+
+# Test backend health (replace with your backend URL)
+curl https://your-backend-url.onrender.com/api/health
+
+# Should return: {"status":"ok","message":"AI Teaching Assistant API is running"}
+
+
+# ============================================
+# USEFUL GIT COMMANDS
+# ============================================
+
+# Check status
+git status
+
+# View commit history
+git log --oneline
+
+# Create new branch
+git checkout -b feature-name
+
+# Switch branches
+git checkout main
+
+# Pull latest changes
+git pull origin main
+
+# Force push (use carefully!)
+git push -f origin main
+
+
+# ============================================
+# RENDER CLI (Optional)
+# ============================================
+
+# Install Render CLI
+npm install -g @render/cli
+
+# Login to Render
+render login
+
+# View services
+render services list
+
+# View logs
+render logs <service-id>
+
+
+# ============================================
+# MONGODB COMMANDS (Optional)
+# ============================================
+
+# Connect to MongoDB (replace with your URI)
+mongosh "mongodb+srv://username:password@cluster.mongodb.net/ai-teaching-assistant"
+
+# Show databases
+show dbs
+
+# Use database
+use ai-teaching-assistant
+
+# Show collections
+show collections
+
+# Count users
+db.users.countDocuments()
+
+# Count meetings
+db.meetings.countDocuments()
+
+
+# ============================================
+# TROUBLESHOOTING COMMANDS
+# ============================================
+
+# Clear npm cache
+npm cache clean --force
+
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+npm install
+
+# Check Node version
+node --version
+
+# Check npm version
+npm --version
+
+# Check Git version
+git --version
+
+
+# ============================================
+# NOTES
+# ============================================
+
+# 1. Never commit .env files
+# 2. Always use environment variables for secrets
+# 3. Test locally before deploying
+# 4. Monitor logs after deployment
+# 5. Set OpenAI spending limits
+# 6. Backup your database regularly
+# 7. Keep dependencies updated
+# 8. Use HTTPS in production
+# 9. Enable CORS only for your domain
+# 10. Monitor API usage and costs
+
+
+# ============================================
+# QUICK LINKS
+# ============================================
+
+# Render Dashboard: https://dashboard.render.com
+# MongoDB Atlas: https://cloud.mongodb.com
+# OpenAI Dashboard: https://platform.openai.com
+# GitHub: https://github.com
+# Gmail App Passwords: https://myaccount.google.com/apppasswords
+
+
+# ============================================
+# DEPLOYMENT CHECKLIST
+# ============================================
+
+# [ ] MongoDB Atlas cluster created
+# [ ] OpenAI API key obtained
+# [ ] Gmail app password generated
+# [ ] JWT secret generated
+# [ ] GitHub repository created
+# [ ] Code pushed to GitHub
+# [ ] Render account created
+# [ ] Services deployed on Render
+# [ ] Environment variables set
+# [ ] URLs updated
+# [ ] CORS configured
+# [ ] Application tested
+# [ ] All features working
+
+
+# ============================================
+# SUCCESS!
+# ============================================
+
+# If all steps completed successfully:
+# Your AI Teaching Assistant is now LIVE! 🎉
+# Share your frontend URL with users!
