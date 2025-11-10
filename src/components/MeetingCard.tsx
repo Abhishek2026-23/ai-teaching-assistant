@@ -7,10 +7,11 @@ interface MeetingCardProps {
 }
 
 export default function MeetingCard({ meeting }: MeetingCardProps) {
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     scheduled: 'bg-blue-100 text-blue-800',
     'in-progress': 'bg-green-100 text-green-800',
     completed: 'bg-gray-100 text-gray-800',
+    cancelled: 'bg-gray-100 text-gray-800',
     failed: 'bg-red-100 text-red-800',
   }
 
