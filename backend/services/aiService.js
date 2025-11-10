@@ -4,40 +4,49 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export async function generateNotes(transcript) {
-  // This is a placeholder for OpenAI integration
-  // You'll need to add your OpenAI API key in .env
+  // Using Google Gemini API (FREE)
   
   try {
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GEMINI_API_KEY) {
       // Fallback: basic text processing
       return generateBasicNotes(transcript);
     }
 
     const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an AI assistant that generates structured notes from meeting transcripts. Extract key points, summary, and action items.'
-          },
-          {
-            role: 'user',
-            content: `Generate structured notes from this transcript:\n\n${transcript}`
-          }
-        ],
-        temperature: 0.7
+        contents: [{
+          parts: [{
+            text: `You are an AI assistant that generates structured notes from meeting transcripts. Extract key points, summary, and action items.
+
+Generate structured notes from this transcript:
+
+${transcript}
+
+Format your response as:
+
+SUMMARY:
+[2-3 sentence overview]
+
+KEY POINTS:
+- [Point 1]
+- [Point 2]
+- [Point 3]
+
+ACTION ITEMS:
+- [Action 1]
+- [Action 2]`
+          }]
+        }]
       },
       {
         headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
           'Content-Type': 'application/json'
         }
       }
     );
 
-    const content = response.data.choices[0].message.content;
+    const content = response.data.candidates[0].content.parts[0].text;
     return parseAIResponse(content);
   } catch (error) {
     console.error('AI service error:', error.message);
@@ -117,28 +126,31 @@ function parseAIResponse(content) {
   };
 }
 
-// Enhanced note generation with better prompting
+// Enhanced note generation with better prompting using Gemini
 export async function generateNotesEnhanced(transcript, meetingTitle = 'Meeting') {
   try {
-    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key_here') {
-      console.log('OpenAI API key not configured, using basic notes generation');
+    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
+      console.log('Gemini API key not configured, using basic notes generation');
       return generateBasicNotes(transcript);
     }
 
     const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: `You are an expert educational assistant that creates comprehensive study notes from lecture transcripts. 
-            
+        contents: [{
+          parts: [{
+            text: `You are an expert educational assistant that creates comprehensive study notes from lecture transcripts.
+
 Your task is to:
 1. Create a clear, concise summary
 2. Extract key concepts and main points
 3. Identify action items or homework
 4. Organize information in a student-friendly format
+
+Meeting Title: ${meetingTitle}
+
+Transcript:
+${transcript}
 
 Format your response as:
 
@@ -149,30 +161,25 @@ KEY POINTS:
 - [Point 1]
 - [Point 2]
 - [Point 3]
-...
 
 ACTION ITEMS:
 - [Action 1]
-- [Action 2]
-...`
-          },
-          {
-            role: 'user',
-            content: `Meeting Title: ${meetingTitle}\n\nTranscript:\n${transcript}`
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000
+- [Action 2]`
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1000
+        }
       },
       {
         headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
           'Content-Type': 'application/json'
         }
       }
     );
 
-    const content = response.data.choices[0].message.content;
+    const content = response.data.candidates[0].content.parts[0].text;
     const parsed = parseAIResponse(content);
     parsed.title = `${meetingTitle} - Notes`;
     

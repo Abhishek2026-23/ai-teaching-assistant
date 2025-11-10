@@ -24,16 +24,28 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Database connection
-const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://Abhisheksingh:abhimongodb123@cluster0.mvjlzrx.mongodb.net/ai-teaching-assistant?retryWrites=true&w=majority';
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not set in environment variables');
+  process.exit(1);
+}
+
 console.log('Connecting to MongoDB...');
-mongoose.connect(mongoUri)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Connected to MongoDB Atlas'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
 
 // Routes
 app.use('/api/auth', authRoutes);

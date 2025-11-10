@@ -6,11 +6,12 @@ export interface Meeting {
   meetingUrl?: string
   scheduledTime: string
   duration?: number
-  status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled'
+  status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled' | 'failed'
   transcript?: string
   recordingUrl?: string
   teacherId?: string
   createdAt?: string
+  schedule?: string
 }
 
 export interface Transcript {
@@ -27,8 +28,8 @@ export interface Note {
   id?: string
   meetingId: string
   meeting?: Meeting
-  title: string
-  content: string
+  title?: string
+  content?: string
   summary?: string
   keyPoints?: string[]
   topics?: string[]

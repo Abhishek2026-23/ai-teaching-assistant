@@ -42,9 +42,9 @@ If you just want to get started right now:
 ### 2. Push to GitHub
 ```bash
 git init
-git add .
+g.it add 
 git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR_USERNAME/ai-teaching-assistant.git
+git remote add origin https://github.com/Abhishek2026-23/ai-teaching-assistant.git
 git push -u origin main
 ```
 
