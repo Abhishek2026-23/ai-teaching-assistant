@@ -1,14 +1,23 @@
 import { useState } from 'react'
-import { Save } from 'lucide-react'
+import { Save, LogOut } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function Settings() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
   const [settings, setSettings] = useState({
-    email: 'student@example.com',
-    name: 'Student Name',
+    email: user?.email || 'student@example.com',
+    name: user?.name || 'Student Name',
     autoJoin: true,
     autoGenerateNotes: true,
     emailNotifications: false,
   })
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   const handleSave = () => {
     // TODO: Save to API
@@ -84,13 +93,23 @@ export default function Settings() {
         </div>
       </div>
 
-      <button
-        onClick={handleSave}
-        className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
-      >
-        <Save size={20} />
-        Save Settings
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={handleSave}
+          className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          <Save size={20} />
+          Save Settings
+        </button>
+        
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+        >
+          <LogOut size={20} />
+          Logout
+        </button>
+      </div>
     </div>
   )
 }

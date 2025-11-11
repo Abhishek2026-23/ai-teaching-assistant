@@ -1,13 +1,22 @@
 import axios from 'axios';
 import { Meeting, Note } from '../types';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+// Add token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // Meetings API
@@ -68,6 +77,24 @@ export const scheduleApi = {
 
   getRange: async (start: string, end: string): Promise<Meeting[]> => {
     const response = await api.get(`/schedule/range?start=${start}&end=${end}`);
+    return response.data;
+  },
+};
+
+// Auth API
+export const authApi = {
+  login: async (email: string, password: string) => {
+    const response = await api.post('/api/auth/login', { email, password });
+    return response.data;
+  },
+
+  signup: async (name: string, email: string, password: string) => {
+    const response = await api.post('/api/auth/signup', { name, email, password });
+    return response.data;
+  },
+
+  forgotPassword: async (email: string) => {
+    const response = await api.post('/api/auth/forgot-password', { email });
     return response.data;
   },
 };
