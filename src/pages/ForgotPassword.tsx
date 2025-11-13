@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -14,6 +14,8 @@ export default function ForgotPassword() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [countdown, setCountdown] = useState(0)
+  const [canResend, setCanResend] = useState(true)
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,15 +28,64 @@ export default function ForgotPassword() {
       setMessage('6-digit code sent to your email! Check your inbox.')
       setStep('code')
       
+      // Start 2-minute countdown
+      setCanResend(false)
+      setCountdown(120) // 2 minutes = 120 seconds
+      
       // Show code in development mode
       if (response.data.resetCode) {
         console.log('🔑 Reset Code (DEV MODE):', response.data.resetCode)
+        setMessage(`Code sent! (DEV: ${response.data.resetCode})`)
       }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to send reset code')
     } finally {
       setLoading(false)
     }
+  }
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1)
+      }, 1000)
+      return () => clearTimeout(timer)
+    } else if (countdown === 0 && !canResend) {
+      setCanResend(true)
+    }
+  }, [countdown, canResend])
+
+  const handleResendCode = async () => {
+    if (!canResend) return
+    
+    setError('')
+    setMessage('')
+    setLoading(true)
+
+    try {
+      const response = await axios.post(`${API_URL}/api/auth/forgot-password`, { email })
+      setMessage('New code sent to your email!')
+      
+      // Restart countdown
+      setCanResend(false)
+      setCountdown(120)
+      
+      if (response.data.resetCode) {
+        console.log('🔑 Reset Code (DEV MODE):', response.data.resetCode)
+        setMessage(`New code sent! (DEV: ${response.data.resetCode})`)
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to resend code')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   const handleVerifyCode = async (e: React.FormEvent) => {
@@ -168,13 +219,30 @@ export default function ForgotPassword() {
               {loading ? 'Verifying...' : 'Verify Code'}
             </button>
 
-            <button
-              type="button"
-              onClick={() => setStep('email')}
-              className="w-full text-gray-600 hover:text-gray-800 text-sm"
-            >
-              ← Back to email
-            </button>
+            <div className="flex justify-between items-center">
+              <button
+                type="button"
+                onClick={() => setStep('email')}
+                className="text-gray-600 hover:text-gray-800 text-sm"
+              >
+                ← Back to email
+              </button>
+              
+              {canResend ? (
+                <button
+                  type="button"
+                  onClick={handleResendCode}
+                  disabled={loading}
+                  className="text-purple-600 hover:text-purple-700 text-sm font-semibold"
+                >
+                  Resend Code
+                </button>
+              ) : (
+                <span className="text-gray-500 text-sm">
+                  Resend in {formatTime(countdown)}
+                </span>
+              )}
+            </div>
           </form>
         )}
 

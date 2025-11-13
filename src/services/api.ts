@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Meeting, Note } from '../types';
 
-const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -89,7 +89,7 @@ export const authApi = {
   },
 
   signup: async (name: string, email: string, password: string) => {
-    const response = await api.post('/api/auth/signup', { name, email, password });
+    const response = await api.post('/api/auth/register', { name, email, password });
     return response.data;
   },
 
