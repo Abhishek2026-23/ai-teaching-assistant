@@ -9,6 +9,12 @@ dotenv.config();
 
 // Create transporter
 const createTransporter = () => {
+  // Check if email is configured
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    console.warn('⚠️ Email not configured. Using console logging instead.');
+    return null;
+  }
+  
   // For development, use Gmail or any SMTP service
   // For production, use SendGrid, AWS SES, or similar
   
@@ -27,8 +33,8 @@ const createTransporter = () => {
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-      user: process.env.EMAIL_USER || 'test@ethereal.email',
-      pass: process.env.EMAIL_PASSWORD || 'test123'
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
     }
   });
 };
@@ -39,6 +45,16 @@ const createTransporter = () => {
 export async function sendPasswordResetEmail(email, resetCode, userName) {
   try {
     const transporter = createTransporter();
+    
+    // If email not configured, just log the code
+    if (!transporter) {
+      console.log('📧 EMAIL NOT CONFIGURED - Reset code for', email, ':', resetCode);
+      return {
+        success: true,
+        messageId: 'no-email-configured',
+        resetCode // Return code for development
+      };
+    }
     
     const mailOptions = {
       from: `"AI Teaching Assistant" <${process.env.EMAIL_USER || 'noreply@aiteaching.com'}>`,
@@ -142,6 +158,15 @@ export async function sendPasswordResetEmail(email, resetCode, userName) {
 export async function sendWelcomeEmail(email, userName) {
   try {
     const transporter = createTransporter();
+    
+    // If email not configured, just log
+    if (!transporter) {
+      console.log('📧 Welcome email would be sent to:', email, '(Email not configured)');
+      return {
+        success: true,
+        messageId: 'no-email-configured'
+      };
+    }
     
     const mailOptions = {
       from: `"AI Teaching Assistant" <${process.env.EMAIL_USER || 'noreply@aiteaching.com'}>`,

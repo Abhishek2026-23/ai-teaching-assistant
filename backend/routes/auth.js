@@ -25,6 +25,12 @@ router.post('/register', async (req, res) => {
 
     await user.save();
 
+    // Send welcome email (don't wait for it)
+    const { sendWelcomeEmail } = await import('../services/emailService.js');
+    sendWelcomeEmail(user.email, user.name).catch(err => {
+      console.error('Failed to send welcome email:', err.message);
+    });
+
     // Generate token
     const token = generateToken(user._id);
 
@@ -186,12 +192,12 @@ router.post('/forgot-password', async (req, res) => {
     await passwordReset.save();
     
     // Send email
-    await sendPasswordResetEmail(user.email, resetCode, user.name);
+    const emailResult = await sendPasswordResetEmail(user.email, resetCode, user.name);
     
     res.json({ 
       message: 'Reset code sent to your email',
-      // For testing only - remove in production
-      ...(process.env.NODE_ENV === 'development' && { resetCode })
+      // Always return code if email not configured or in development
+      ...((!process.env.EMAIL_USER || process.env.NODE_ENV === 'development') && { resetCode })
     });
   } catch (error) {
     console.error('Forgot password error:', error);
