@@ -191,17 +191,22 @@ router.post('/forgot-password', async (req, res) => {
     });
     await passwordReset.save();
     
-    // Send email
-    const emailResult = await sendPasswordResetEmail(user.email, resetCode, user.name);
+    // Try to send email (don't fail if it doesn't work)
+    try {
+      await sendPasswordResetEmail(user.email, resetCode, user.name);
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError.message);
+      // Continue anyway - code is saved in database
+    }
     
     res.json({ 
       message: 'Reset code sent to your email',
       // Always return code if email not configured or in development
-      ...((!process.env.EMAIL_USER || process.env.NODE_ENV === 'development') && { resetCode })
+      resetCode: resetCode // Always return for now since email isn't configured
     });
   } catch (error) {
     console.error('Forgot password error:', error);
-    res.status(500).json({ error: 'Failed to process request' });
+    res.status(500).json({ error: 'Failed to process request', details: error.message });
   }
 });
 

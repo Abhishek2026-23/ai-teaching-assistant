@@ -21,6 +21,7 @@
     "mongoose": "^8.0.0",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^4.2.1",
+    "nodemailer": "^6.9.7",
     "puppeteer": "^24.29.1",
     "puppeteer-stream": "^3.0.22"
   },
