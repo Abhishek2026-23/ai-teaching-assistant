@@ -9,11 +9,18 @@ dotenv.config();
 
 // Create transporter
 const createTransporter = () => {
+  // Support both EMAIL_PASSWORD and EMAIL_PASS
+  const emailPassword = process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS;
+  
   // Check if email is configured
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+  if (!process.env.EMAIL_USER || !emailPassword) {
     console.warn('⚠️ Email not configured. Using console logging instead.');
+    console.warn('EMAIL_USER:', process.env.EMAIL_USER ? 'Set' : 'Not set');
+    console.warn('EMAIL_PASSWORD/EMAIL_PASS:', emailPassword ? 'Set' : 'Not set');
     return null;
   }
+  
+  console.log('📧 Configuring email with:', process.env.EMAIL_USER);
   
   // For development, use Gmail or any SMTP service
   // For production, use SendGrid, AWS SES, or similar
@@ -23,7 +30,7 @@ const createTransporter = () => {
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD // Use App Password for Gmail
+        pass: emailPassword // Use App Password for Gmail
       }
     });
   }
@@ -34,7 +41,7 @@ const createTransporter = () => {
     port: 587,
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
+      pass: emailPassword
     }
   });
 };

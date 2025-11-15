@@ -183,6 +183,9 @@ router.post('/forgot-password', async (req, res) => {
     
     const resetCode = generateResetCode();
     
+    // Log the code for debugging (check Render logs)
+    console.log('🔑 PASSWORD RESET CODE for', user.email, ':', resetCode);
+    
     // Save reset code to database
     const passwordReset = new PasswordReset({
       userId: user._id,
@@ -194,8 +197,10 @@ router.post('/forgot-password', async (req, res) => {
     // Try to send email (don't fail if it doesn't work)
     try {
       await sendPasswordResetEmail(user.email, resetCode, user.name);
+      console.log('✅ Email sent successfully to', user.email);
     } catch (emailError) {
-      console.error('Email sending failed:', emailError.message);
+      console.error('❌ Email sending failed:', emailError.message);
+      console.log('💡 Reset code is still valid, check logs for code:', resetCode);
       // Continue anyway - code is saved in database
     }
     
