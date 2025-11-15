@@ -200,9 +200,8 @@ router.post('/forgot-password', async (req, res) => {
     }
     
     res.json({ 
-      message: 'Reset code sent to your email',
-      // Always return code if email not configured or in development
-      resetCode: resetCode // Always return for now since email isn't configured
+      message: 'Reset code sent to your email'
+      // Code is only sent via email, not in response for security
     });
   } catch (error) {
     console.error('Forgot password error:', error);
