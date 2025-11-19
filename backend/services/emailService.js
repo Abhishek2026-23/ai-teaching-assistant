@@ -21,21 +21,34 @@ const createTransporter = () => {
   }
   
   console.log('📧 Configuring email with:', process.env.EMAIL_USER);
+  console.log('📧 Email service:', process.env.EMAIL_SERVICE);
   
-  // For development, use Gmail or any SMTP service
-  // For production, use SendGrid, AWS SES, or similar
-  
+  // Gmail configuration
   if (process.env.EMAIL_SERVICE === 'gmail') {
-    return nodemailer.createTransport({
+    return nodemailer.createTransporter({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: emailPassword // Use App Password for Gmail
+        pass: emailPassword
+      }
+    });
+  }
+  
+  // SMTP configuration (Brevo, SendGrid, etc.)
+  if (process.env.EMAIL_SERVICE === 'smtp' && process.env.EMAIL_HOST) {
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: emailPassword
       }
     });
   }
   
   // Default: Use Ethereal (fake SMTP for testing)
+  console.warn('⚠️ Using default Ethereal SMTP (for testing only)');
   return nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
