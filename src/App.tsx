@@ -1,10 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import ForgotPassword from './pages/ForgotPassword'
 import Dashboard from './pages/Dashboard'
 import Meetings from './pages/Meetings'
 import Notes from './pages/Notes'
@@ -13,13 +11,11 @@ import Settings from './pages/Settings'
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+    <Router>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login/*" element={<Login />} />
+        <Route path="/signup/*" element={<Signup />} />
           
           {/* Protected routes */}
           <Route
@@ -83,8 +79,7 @@ function App() {
             }
           />
         </Routes>
-      </Router>
-    </AuthProvider>
+    </Router>
   )
 }
 
