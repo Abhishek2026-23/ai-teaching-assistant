@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import ProtectedRoute from './components/ProtectedRoute'
+import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -9,77 +9,115 @@ import Notes from './pages/Notes'
 import Schedule from './pages/Schedule'
 import Settings from './pages/Settings'
 
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!clerkPubKey) {
+  throw new Error('Missing Clerk Publishable Key')
+}
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/login/*" element={<Login />} />
-        <Route path="/signup/*" element={<Signup />} />
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <Router>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login/*" element={<Login />} />
+          <Route path="/signup/*" element={<Signup />} />
           
           {/* Protected routes */}
           <Route
             path="/"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <Dashboard />
-                </Layout>
-              </ProtectedRoute>
+              <>
+                <SignedIn>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
             }
           />
           <Route
             path="/meetings"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <Meetings />
-                </Layout>
-              </ProtectedRoute>
+              <>
+                <SignedIn>
+                  <Layout>
+                    <Meetings />
+                  </Layout>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
             }
           />
           <Route
             path="/notes"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <Notes />
-                </Layout>
-              </ProtectedRoute>
+              <>
+                <SignedIn>
+                  <Layout>
+                    <Notes />
+                  </Layout>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
             }
           />
           <Route
             path="/notes/:id"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <Notes />
-                </Layout>
-              </ProtectedRoute>
+              <>
+                <SignedIn>
+                  <Layout>
+                    <Notes />
+                  </Layout>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
             }
           />
           <Route
             path="/schedule"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <Schedule />
-                </Layout>
-              </ProtectedRoute>
+              <>
+                <SignedIn>
+                  <Layout>
+                    <Schedule />
+                  </Layout>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
             }
           />
           <Route
             path="/settings"
             element={
-              <ProtectedRoute>
-                <Layout>
-                  <Settings />
-                </Layout>
-              </ProtectedRoute>
+              <>
+                <SignedIn>
+                  <Layout>
+                    <Settings />
+                  </Layout>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
             }
           />
         </Routes>
-    </Router>
+      </Router>
+    </ClerkProvider>
   )
 }
 

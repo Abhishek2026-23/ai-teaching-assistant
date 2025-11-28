@@ -1,24 +1,15 @@
 import { Bell } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { useUser, UserButton } from '@clerk/clerk-react'
 
 export default function Header() {
-  const { user } = useAuth()
+  const { user } = useUser()
   
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
-
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Welcome back, {user?.name || 'Student'} 👋
+            Welcome back, {user?.firstName || 'Student'} 👋
           </h2>
           <p className="text-sm text-gray-500 mt-1">
             {new Date().toLocaleDateString('en-US', { 
@@ -38,12 +29,17 @@ export default function Header() {
           
           <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-700">{user?.name || 'Student'}</p>
-              <p className="text-xs text-gray-500">{user?.email || 'student@example.com'}</p>
+              <p className="text-sm font-medium text-gray-700">{user?.fullName || 'Student'}</p>
+              <p className="text-xs text-gray-500">{user?.primaryEmailAddress?.emailAddress || 'student@example.com'}</p>
             </div>
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold shadow-lg">
-              {user ? getInitials(user.name) : 'S'}
-            </div>
+            <UserButton 
+              afterSignOutUrl="/login"
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10"
+                }
+              }}
+            />
           </div>
         </div>
       </div>
