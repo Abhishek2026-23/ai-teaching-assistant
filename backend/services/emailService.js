@@ -77,9 +77,9 @@ export async function sendPasswordResetEmail(email, resetCode, userName) {
     }
     
     const mailOptions = {
-      from: `"AI Teaching Assistant" <${process.env.EMAIL_USER || 'noreply@aiteaching.com'}>`,
+      from: `"AI Virtual Student" <${process.env.EMAIL_USER || 'noreply@aivirtualstudent.com'}>`,
       to: email,
-      subject: 'Password Reset Code - AI Teaching Assistant',
+      subject: 'Password Reset Code - AI Virtual Student',
       html: `
         <!DOCTYPE html>
         <html>
@@ -99,7 +99,7 @@ export async function sendPasswordResetEmail(email, resetCode, userName) {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎓 AI Teaching Assistant</h1>
+              <h1>🎓 AI Virtual Student</h1>
               <p>Password Reset Request</p>
             </div>
             <div class="content">
@@ -189,9 +189,9 @@ export async function sendWelcomeEmail(email, userName) {
     }
     
     const mailOptions = {
-      from: `"AI Teaching Assistant" <${process.env.EMAIL_USER || 'noreply@aiteaching.com'}>`,
+      from: `"AI Virtual Student" <${process.env.EMAIL_USER || 'noreply@aivirtualstudent.com'}>`,
       to: email,
-      subject: 'Welcome to AI Teaching Assistant! 🎓',
+      subject: 'Welcome to AI Virtual Student! 🎓',
       html: `
         <!DOCTYPE html>
         <html>
@@ -207,11 +207,11 @@ export async function sendWelcomeEmail(email, userName) {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎓 Welcome to AI Teaching Assistant!</h1>
+              <h1>🎓 Welcome to AI Virtual Student!</h1>
             </div>
             <div class="content">
               <h2>Hello ${userName}! 👋</h2>
-              <p>Thank you for joining AI Teaching Assistant. We're excited to help you never miss a class!</p>
+              <p>Thank you for joining AI Virtual Student. We're excited to help you never miss a class!</p>
               
               <h3>What you can do:</h3>
               <div class="feature">
@@ -272,7 +272,7 @@ export async function sendMeetingReminder(email, userName, meeting) {
     });
     
     const mailOptions = {
-      from: `"AI Teaching Assistant" <${process.env.EMAIL_USER || 'noreply@aiteaching.com'}>`,
+      from: `"AI Virtual Student" <${process.env.EMAIL_USER || 'noreply@aivirtualstudent.com'}>`,
       to: email,
       subject: `🔔 Meeting Reminder: ${meeting.title} in 10 minutes`,
       html: `
@@ -392,7 +392,7 @@ export async function sendNotesReadyEmail(email, userName, meeting, notesUrl) {
     const transporter = createTransporter();
     
     const mailOptions = {
-      from: `"AI Teaching Assistant" <${process.env.EMAIL_USER || 'noreply@aiteaching.com'}>`,
+      from: `"AI Virtual Student" <${process.env.EMAIL_USER || 'noreply@aivirtualstudent.com'}>`,
       to: email,
       subject: `📝 Notes Ready: ${meeting.title}`,
       html: `
