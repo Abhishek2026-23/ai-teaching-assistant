@@ -1,24 +1,40 @@
-import { Bell } from 'lucide-react'
+import { Bell, ArrowLeft } from 'lucide-react'
 import { useUser, UserButton } from '@clerk/clerk-react'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export default function Header() {
   const { user } = useUser()
+  const navigate = useNavigate()
+  const location = useLocation()
+  
+  const showBackButton = location.pathname !== '/'
   
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Welcome back, {user?.firstName || 'Student'} 👋
-          </h2>
-          <p className="text-sm text-gray-500 mt-1">
-            {new Date().toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </p>
+        <div className="flex items-center gap-4">
+          {showBackButton && (
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition flex items-center gap-2 text-gray-600"
+            >
+              <ArrowLeft size={20} />
+              <span className="text-sm font-medium">Back</span>
+            </button>
+          )}
+          <div>
+            <h2 className="text-2xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Welcome back, {user?.firstName || 'Student'} 👋
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              {new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </p>
+          </div>
         </div>
         
         <div className="flex items-center gap-4">
