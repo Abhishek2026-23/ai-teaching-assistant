@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "start": "node server-static.js",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
@@ -13,6 +14,7 @@
     "@clerk/clerk-react": "^5.57.0",
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
+    "express": "^5.1.0",
     "lucide-react": "^0.294.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
