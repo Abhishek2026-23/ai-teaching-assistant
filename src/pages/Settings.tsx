@@ -1,21 +1,22 @@
 import { useState } from 'react'
 import { Save, LogOut } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { useUser, useClerk } from '@clerk/clerk-react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Settings() {
-  const { user, logout } = useAuth()
+  const { user } = useUser()
+  const { signOut } = useClerk()
   const navigate = useNavigate()
   const [settings, setSettings] = useState({
-    email: user?.email || 'student@example.com',
-    name: user?.name || 'Student Name',
+    email: user?.primaryEmailAddress?.emailAddress || 'student@example.com',
+    name: user?.fullName || 'Student Name',
     autoJoin: true,
     autoGenerateNotes: true,
     emailNotifications: false,
   })
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await signOut()
     navigate('/login')
   }
 
@@ -40,9 +41,10 @@ export default function Settings() {
             <input
               type="email"
               value={settings.email}
-              onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              disabled
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
             />
+            <p className="text-xs text-gray-500 mt-1">Email is managed by Clerk authentication</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -51,9 +53,10 @@ export default function Settings() {
             <input
               type="text"
               value={settings.name}
-              onChange={(e) => setSettings({ ...settings, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              disabled
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
             />
+            <p className="text-xs text-gray-500 mt-1">Name is managed by Clerk authentication</p>
           </div>
         </div>
       </div>
@@ -96,10 +99,10 @@ export default function Settings() {
       <div className="flex gap-4">
         <button
           onClick={handleSave}
-          className="flex items-center gap-2 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+          className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white px-6 py-2 rounded-lg hover:shadow-lg transition"
         >
           <Save size={20} />
-          Save Settings
+          Save Preferences
         </button>
         
         <button
