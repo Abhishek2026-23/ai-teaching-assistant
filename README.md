@@ -1,6 +1,6 @@
-# 🎓 AI Virtual Teaching Assistant
+# 🎓 AI Virtual Student
 
-An intelligent web application that automatically attends online meetings, records sessions, transcribes audio, and generates comprehensive AI-powered notes.
+An intelligent web application that automatically attends online meetings, records sessions, transcribes audio, and generates comprehensive AI-powered notes - your personal AI study companion.
 
 ## ✨ Features
 

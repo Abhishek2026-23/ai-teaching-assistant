@@ -1,7 +1,7 @@
-# 🚀 AI Virtual Teaching Assistant - Technology Stack
+# 🚀 AI Virtual Student - Technology Stack
 
 ## Project Overview
-An intelligent teaching assistant that automates lecture recording, transcription, note generation, and meeting management using AI.
+An intelligent virtual student assistant that automates lecture recording, transcription, note generation, and meeting management using AI - your personal AI study companion.
 
 ---
 

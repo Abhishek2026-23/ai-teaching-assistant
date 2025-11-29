@@ -15,8 +15,8 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-primary-600 flex items-center gap-2">
-          🎓 AI Teaching Assistant
+        <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent flex items-center gap-2">
+          🎓 AI Virtual Student
         </h1>
       </div>
       

@@ -1,7 +1,7 @@
 {
-  "name": "ai-teaching-assistant-frontend",
+  "name": "ai-virtual-student-frontend",
   "version": "1.0.0",
-  "description": "AI Virtual Teaching Assistant - Frontend",
+  "description": "AI Virtual Student - Frontend",
   "type": "module",
   "scripts": {
     "dev": "vite",
