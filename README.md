@@ -29,10 +29,13 @@ An intelligent web application that automatically attends online meetings, recor
 
 ## 🛠️ Technology Stack
 
+📖 **[View Complete Technology Documentation](./TECHNOLOGY_STACK.md)**
+
 ### Frontend
 - React 18 with TypeScript
 - Vite for fast development
 - Tailwind CSS for styling
+- Clerk for authentication
 - React Router for navigation
 - Axios for API calls
 
@@ -42,13 +45,14 @@ An intelligent web application that automatically attends online meetings, recor
 - JWT for authentication
 - Puppeteer for browser automation
 - OpenAI Whisper for transcription
-- OpenAI GPT for note generation
+- Google Gemini AI for note generation
 
 ### Infrastructure
 - MongoDB Atlas for database
 - RESTful API architecture
 - Cron jobs for scheduling
 - Email service integration
+- Render for deployment
 
 ## 📋 Prerequisites
 
