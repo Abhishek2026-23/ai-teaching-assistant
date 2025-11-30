@@ -32,6 +32,16 @@ export default function Schedule() {
 
   const handleAddMeeting = async (meeting: Omit<Meeting, 'id' | 'createdAt'>) => {
     try {
+      // Get user email from Clerk
+      let userEmail = ''
+      try {
+        userEmail = user?.primaryEmailAddress?.emailAddress || 
+                   user?.emailAddresses?.[0]?.emailAddress || 
+                   ''
+      } catch (e) {
+        console.warn('Could not get user email from Clerk:', e)
+      }
+      
       // Transform meetingUrl to url for backend
       const meetingData = {
         title: meeting.title,
@@ -39,7 +49,7 @@ export default function Schedule() {
         scheduledTime: meeting.scheduledTime,
         status: meeting.status || 'scheduled',
         duration: meeting.duration || 60,
-        userEmail: user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress
+        userEmail: userEmail
       }
       
       const newMeeting = await meetingsApi.create(meetingData)
