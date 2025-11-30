@@ -19,8 +19,14 @@ export default function AddMeetingModal({ isOpen, onClose, onAdd }: AddMeetingMo
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Convert local datetime to ISO string
+    const localDateTime = new Date(formData.scheduledTime)
+    const isoDateTime = localDateTime.toISOString()
+    
     onAdd({
       ...formData,
+      scheduledTime: isoDateTime,
       status: 'scheduled',
     })
     setFormData({ title: '', meetingUrl: '', scheduledTime: '' })
