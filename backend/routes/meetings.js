@@ -1,13 +1,14 @@
 import express from 'express';
 import Meeting from '../models/Meeting.js';
-import { authenticate } from '../middleware/auth.js';
+import { optionalAuth, getOrCreateUserFromEmail } from '../middleware/optionalAuth.js';
 
 const router = express.Router();
 
-// Get all meetings for authenticated user
-router.get('/', authenticate, async (req, res) => {
+// Get all meetings (optionally filtered by user)
+router.get('/', optionalAuth, async (req, res) => {
   try {
-    const meetings = await Meeting.find({ userId: req.userId }).sort({ scheduledTime: -1 });
+    const query = req.userId ? { userId: req.userId } : {};
+    const meetings = await Meeting.find(query).sort({ scheduledTime: -1 });
     res.json(meetings);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -28,17 +29,28 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new meeting
-router.post('/', authenticate, async (req, res) => {
+router.post('/', optionalAuth, async (req, res) => {
   try {
+    let userId = req.userId;
+    
+    // If no userId from JWT, try to get/create from Clerk email
+    if (!userId && req.body.userEmail) {
+      const user = await getOrCreateUserFromEmail(req.body.userEmail);
+      userId = user?._id;
+    }
+    
     const meetingData = {
       ...req.body,
-      userId: req.userId // Automatically attach authenticated user's ID
+      userId: userId || null
     };
+    
+    // Remove userEmail from meeting data (it's not in schema)
+    delete meetingData.userEmail;
     
     const meeting = new Meeting(meetingData);
     await meeting.save();
     
-    console.log(`✅ Meeting created for user ${req.user.email}:`, meeting.title);
+    console.log(`✅ Meeting created:`, meeting.title, userId ? `for user ${userId}` : '(no user)');
     
     res.status(201).json(meeting);
   } catch (error) {
@@ -47,10 +59,9 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // Update meeting
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', optionalAuth, async (req, res) => {
   try {
-    // Only allow users to update their own meetings
-    const meeting = await Meeting.findOne({ _id: req.params.id, userId: req.userId });
+    const meeting = await Meeting.findById(req.params.id);
     if (!meeting) {
       return res.status(404).json({ error: 'Meeting not found' });
     }
@@ -65,10 +76,9 @@ router.put('/:id', authenticate, async (req, res) => {
 });
 
 // Delete meeting
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', optionalAuth, async (req, res) => {
   try {
-    // Only allow users to delete their own meetings
-    const meeting = await Meeting.findOneAndDelete({ _id: req.params.id, userId: req.userId });
+    const meeting = await Meeting.findByIdAndDelete(req.params.id);
     if (!meeting) {
       return res.status(404).json({ error: 'Meeting not found' });
     }

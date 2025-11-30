@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Plus } from 'lucide-react'
+import { useUser } from '@clerk/clerk-react'
 import { Meeting } from '../types'
 import MeetingCard from '../components/MeetingCard'
 import AddMeetingModal from '../components/AddMeetingModal'
 import { meetingsApi } from '../services/api'
 
 export default function Schedule() {
+  const { user } = useUser()
   const [meetings, setMeetings] = useState<Meeting[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -36,7 +38,8 @@ export default function Schedule() {
         url: meeting.meetingUrl || meeting.url,
         scheduledTime: meeting.scheduledTime,
         status: meeting.status || 'scheduled',
-        duration: meeting.duration || 60
+        duration: meeting.duration || 60,
+        userEmail: user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress
       }
       
       const newMeeting = await meetingsApi.create(meetingData)
