@@ -1,12 +1,13 @@
 import express from 'express';
 import Meeting from '../models/Meeting.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Get all meetings
-router.get('/', async (req, res) => {
+// Get all meetings for authenticated user
+router.get('/', authenticate, async (req, res) => {
   try {
-    const meetings = await Meeting.find().sort({ scheduledTime: -1 });
+    const meetings = await Meeting.find({ userId: req.userId }).sort({ scheduledTime: -1 });
     res.json(meetings);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -27,16 +28,18 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new meeting
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
   try {
     const meetingData = {
       ...req.body,
-      // If userId is provided in request (from authenticated user)
-      userId: req.body.userId || req.userId
+      userId: req.userId // Automatically attach authenticated user's ID
     };
     
     const meeting = new Meeting(meetingData);
     await meeting.save();
+    
+    console.log(`✅ Meeting created for user ${req.user.email}:`, meeting.title);
+    
     res.status(201).json(meeting);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -44,16 +47,17 @@ router.post('/', async (req, res) => {
 });
 
 // Update meeting
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticate, async (req, res) => {
   try {
-    const meeting = await Meeting.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    // Only allow users to update their own meetings
+    const meeting = await Meeting.findOne({ _id: req.params.id, userId: req.userId });
     if (!meeting) {
       return res.status(404).json({ error: 'Meeting not found' });
     }
+    
+    Object.assign(meeting, req.body);
+    await meeting.save();
+    
     res.json(meeting);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -61,9 +65,10 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete meeting
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
   try {
-    const meeting = await Meeting.findByIdAndDelete(req.params.id);
+    // Only allow users to delete their own meetings
+    const meeting = await Meeting.findOneAndDelete({ _id: req.params.id, userId: req.userId });
     if (!meeting) {
       return res.status(404).json({ error: 'Meeting not found' });
     }
