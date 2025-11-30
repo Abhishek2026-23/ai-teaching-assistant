@@ -27,9 +27,8 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  'https://ai-teaching-assistant-frontend.onrender.com',
-  'https://ai-teaching-assistant-blond.vercel.app',
   'https://ai-virtual-student.vercel.app',
+  'https://ai-teaching-assistant-blond.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
