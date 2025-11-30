@@ -1,23 +1,44 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus } from 'lucide-react'
 import { Meeting } from '../types'
 import MeetingCard from '../components/MeetingCard'
 import AddMeetingModal from '../components/AddMeetingModal'
+import { meetingsApi } from '../services/api'
 
 export default function Schedule() {
   const [meetings, setMeetings] = useState<Meeting[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const handleAddMeeting = (meeting: Omit<Meeting, 'id' | 'createdAt'>) => {
-    const newMeeting: Meeting = {
-      ...meeting,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
+  useEffect(() => {
+    fetchMeetings()
+  }, [])
+
+  const fetchMeetings = async () => {
+    try {
+      setLoading(true)
+      const data = await meetingsApi.getAll()
+      setMeetings(data)
+    } catch (err: any) {
+      console.error('Failed to fetch meetings:', err)
+      setError('Failed to load meetings')
+    } finally {
+      setLoading(false)
     }
-    setMeetings([...meetings, newMeeting].sort((a, b) => 
-      new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime()
-    ))
-    setIsModalOpen(false)
+  }
+
+  const handleAddMeeting = async (meeting: Omit<Meeting, 'id' | 'createdAt'>) => {
+    try {
+      const newMeeting = await meetingsApi.create(meeting)
+      setMeetings([...meetings, newMeeting].sort((a, b) => 
+        new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime()
+      ))
+      setIsModalOpen(false)
+    } catch (err: any) {
+      console.error('Failed to create meeting:', err)
+      alert('Failed to schedule meeting. Please try again.')
+    }
   }
 
   const upcomingMeetings = meetings.filter(
@@ -42,7 +63,22 @@ export default function Schedule() {
           <h2 className="text-xl font-semibold text-gray-800">Upcoming Meetings</h2>
         </div>
         <div className="p-6 space-y-4">
-          {upcomingMeetings.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading meetings...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-600 mb-4">{error}</p>
+              <button
+                onClick={fetchMeetings}
+                className="text-purple-600 hover:text-purple-700 font-medium"
+              >
+                Try again
+              </button>
+            </div>
+          ) : upcomingMeetings.length > 0 ? (
             upcomingMeetings.map((meeting) => (
               <MeetingCard key={meeting.id} meeting={meeting} />
             ))
@@ -51,7 +87,7 @@ export default function Schedule() {
               <p className="text-gray-500 mb-4">No upcoming meetings</p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="text-primary-600 hover:text-primary-700 font-medium"
+                className="text-purple-600 hover:text-purple-700 font-medium"
               >
                 Schedule your first meeting
               </button>
