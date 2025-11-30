@@ -15,13 +15,13 @@ export function startMeetingScheduler() {
       const now = new Date();
       const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60000);
       const tenMinutesFromNow = new Date(now.getTime() + 10 * 60000);
-      const fifteenMinutesFromNow = new Date(now.getTime() + 15 * 60000);
+      const twentyMinutesFromNow = new Date(now.getTime() + 20 * 60000);
       
-      // Send reminders for meetings starting in 10-15 minutes
+      // Send reminders for meetings starting in 5-20 minutes (wider window to catch all meetings)
       const reminderMeetings = await Meeting.find({
         scheduledTime: {
-          $gte: tenMinutesFromNow,
-          $lte: fifteenMinutesFromNow
+          $gte: fiveMinutesFromNow,
+          $lte: twentyMinutesFromNow
         },
         status: 'scheduled',
         reminderSent: { $ne: true }
