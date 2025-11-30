@@ -50,6 +50,17 @@ export default function Schedule() {
     }
   }
 
+  const handleDeleteMeeting = async (id: string) => {
+    try {
+      await meetingsApi.delete(id)
+      setMeetings(meetings.filter(m => m.id !== id))
+    } catch (err: any) {
+      console.error('Failed to delete meeting:', err)
+      alert(`Failed to delete meeting: ${err.response?.data?.error || err.message}`)
+      throw err
+    }
+  }
+
   const upcomingMeetings = meetings.filter(
     m => new Date(m.scheduledTime) > new Date()
   )
@@ -89,7 +100,7 @@ export default function Schedule() {
             </div>
           ) : upcomingMeetings.length > 0 ? (
             upcomingMeetings.map((meeting) => (
-              <MeetingCard key={meeting.id} meeting={meeting} />
+              <MeetingCard key={meeting.id} meeting={meeting} onDelete={handleDeleteMeeting} />
             ))
           ) : (
             <div className="text-center py-12">
