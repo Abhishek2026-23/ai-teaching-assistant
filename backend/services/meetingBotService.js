@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
 import fs from 'fs';
 import path from 'path';
 import { getStream } from 'puppeteer-stream';
@@ -6,6 +7,9 @@ import ffmpeg from 'fluent-ffmpeg';
 import ffmpegPath from '@ffmpeg-installer/ffmpeg';
 
 ffmpeg.setFfmpegPath(ffmpegPath.path);
+
+// Check if running in production (cloud environment)
+const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * Bot that joins Google Meet, records audio, and saves it
@@ -28,19 +32,42 @@ export class MeetingBot {
     try {
       console.log(`🤖 Launching bot for meeting: ${this.meetingId}`);
       
-      // Launch browser with audio capture enabled
-      this.browser = await puppeteer.launch({
-        headless: false, // Set to true in production
-        args: [
+      // Configure browser options based on environment
+      const browserOptions = {
+        headless: 'new',
+        args: isProduction ? [
+          ...chromium.args,
           '--no-sandbox',
           '--disable-setuid-sandbox',
-          '--use-fake-ui-for-media-stream', // Auto-allow mic/camera
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--single-process',
+          '--disable-gpu',
+          '--use-fake-ui-for-media-stream',
+          '--use-fake-device-for-media-stream',
+          '--disable-web-security',
+          '--disable-features=IsolateOrigins,site-per-process',
+          '--autoplay-policy=no-user-gesture-required'
+        ] : [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--use-fake-ui-for-media-stream',
           '--use-fake-device-for-media-stream',
           '--disable-web-security',
           '--disable-features=IsolateOrigins,site-per-process',
           '--autoplay-policy=no-user-gesture-required'
         ]
-      });
+      };
+
+      // Set executable path for production
+      if (isProduction) {
+        browserOptions.executablePath = await chromium.executablePath();
+      }
+
+      // Launch browser
+      this.browser = await puppeteer.launch(browserOptions);
 
       this.page = await this.browser.newPage();
       

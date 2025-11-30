@@ -35,10 +35,6 @@ export function startMeetingScheduler() {
         }
       }
       
-      // Auto-join bot disabled - only email reminders are active
-      // To enable auto-join, uncomment the code below and configure Puppeteer
-      
-      /*
       // Find meetings starting in the next 5 minutes
       const upcomingMeetings = await Meeting.find({
         scheduledTime: {
@@ -55,7 +51,6 @@ export function startMeetingScheduler() {
           await prepareForMeeting(meeting);
         }
       }
-      */
     } catch (error) {
       console.error('Scheduler error:', error.message);
     }
