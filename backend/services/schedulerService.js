@@ -27,10 +27,16 @@ export function startMeetingScheduler() {
         reminderSent: { $ne: true }
       }).populate('userId', 'email name');
       
+      console.log(`📧 Found ${reminderMeetings.length} meetings needing reminders`);
+      
       if (reminderMeetings.length > 0) {
         console.log(`📧 Sending reminders for ${reminderMeetings.length} meetings`);
         
         for (const meeting of reminderMeetings) {
+          console.log(`📧 Processing reminder for: ${meeting.title}`);
+          console.log(`   - Meeting ID: ${meeting._id}`);
+          console.log(`   - User ID: ${meeting.userId}`);
+          console.log(`   - Scheduled: ${meeting.scheduledTime}`);
           await sendMeetingReminder(meeting);
         }
       }
@@ -65,38 +71,59 @@ export function startMeetingScheduler() {
  */
 async function sendMeetingReminder(meeting) {
   try {
+    console.log(`📧 Attempting to send reminder for: ${meeting.title}`);
+    
     // Get user email
     let userEmail, userName;
     
     if (meeting.userId && meeting.userId.email) {
       userEmail = meeting.userId.email;
       userName = meeting.userId.name;
-    } else {
+      console.log(`✅ Found user from populated field: ${userEmail}`);
+    } else if (meeting.userId) {
       // Fallback: get user from meeting
+      console.log(`⚠️ User not populated, fetching manually...`);
       const User = (await import('../models/User.js')).default;
       const user = await User.findById(meeting.userId);
       if (user) {
         userEmail = user.email;
         userName = user.name;
+        console.log(`✅ Found user from database: ${userEmail}`);
+      } else {
+        console.log(`❌ User not found in database for ID: ${meeting.userId}`);
       }
+    } else {
+      console.log(`❌ No userId attached to meeting: ${meeting.title}`);
     }
     
     if (!userEmail) {
       console.log(`⚠️ No email found for meeting: ${meeting.title}`);
+      console.log(`   Meeting data:`, JSON.stringify({
+        id: meeting._id,
+        title: meeting.title,
+        userId: meeting.userId,
+        scheduledTime: meeting.scheduledTime
+      }, null, 2));
       return;
     }
     
+    console.log(`📧 Sending email to: ${userEmail}`);
+    
     // Send reminder email
     const { sendMeetingReminder: sendEmail } = await import('../services/emailService.js');
-    await sendEmail(userEmail, userName, meeting);
+    const result = await sendEmail(userEmail, userName, meeting);
     
-    // Mark reminder as sent
-    meeting.reminderSent = true;
-    await meeting.save();
-    
-    console.log(`✅ Reminder sent for: ${meeting.title} to ${userEmail}`);
+    if (result && result.success) {
+      // Mark reminder as sent
+      meeting.reminderSent = true;
+      await meeting.save();
+      console.log(`✅ Reminder sent successfully for: ${meeting.title} to ${userEmail}`);
+    } else {
+      console.log(`⚠️ Email service returned unsuccessful result`);
+    }
   } catch (error) {
     console.error(`❌ Failed to send reminder for ${meeting.title}:`, error.message);
+    console.error(`   Stack:`, error.stack);
   }
 }
 

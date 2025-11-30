@@ -9,6 +9,7 @@ import notesRoutes from './routes/notes.js';
 import scheduleRoutes from './routes/schedule.js';
 import authRoutes from './routes/auth.js';
 import transcriptionRoutes from './routes/transcription.js';
+import testRoutes from './routes/test.js';
 import { startMeetingScheduler, checkMissedMeetings } from './services/schedulerService.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -76,6 +77,7 @@ app.use('/api/meetings', meetingRoutes);
 app.use('/api/notes', notesRoutes);
 app.use('/api/schedule', scheduleRoutes);
 app.use('/api/transcription', transcriptionRoutes);
+app.use('/api/test', testRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'AI Teaching Assistant API is running' });
