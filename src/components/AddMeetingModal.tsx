@@ -15,6 +15,25 @@ export default function AddMeetingModal({ isOpen, onClose, onAdd }: AddMeetingMo
     scheduledTime: '',
   })
 
+  // Get user's timezone
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  // Format preview time
+  const getTimePreview = () => {
+    if (!formData.scheduledTime) return ''
+    const date = new Date(formData.scheduledTime)
+    return date.toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZoneName: 'short'
+    })
+  }
+
   if (!isOpen) return null
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -76,7 +95,7 @@ export default function AddMeetingModal({ isOpen, onClose, onAdd }: AddMeetingMo
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Date & Time
+              Date & Time <span className="text-xs text-gray-500">({userTimezone})</span>
             </label>
             <input
               type="datetime-local"
@@ -85,6 +104,11 @@ export default function AddMeetingModal({ isOpen, onClose, onAdd }: AddMeetingMo
               onChange={(e) => setFormData({ ...formData, scheduledTime: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
+            {formData.scheduledTime && (
+              <p className="mt-2 text-xs text-gray-600">
+                📅 {getTimePreview()}
+              </p>
+            )}
           </div>
 
           <div className="flex gap-3 pt-4">

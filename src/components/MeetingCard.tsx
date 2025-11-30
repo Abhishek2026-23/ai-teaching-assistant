@@ -15,6 +15,14 @@ export default function MeetingCard({ meeting }: MeetingCardProps) {
     failed: 'bg-red-100 text-red-800',
   }
 
+  const meetingDate = new Date(meeting.scheduledTime)
+  const timeWithZone = meetingDate.toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZoneName: 'short'
+  })
+
   return (
     <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
@@ -24,11 +32,11 @@ export default function MeetingCard({ meeting }: MeetingCardProps) {
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
             <div className="flex items-center gap-1">
               <Calendar size={16} />
-              <span>{format(new Date(meeting.scheduledTime), 'MMM dd, yyyy')}</span>
+              <span>{format(meetingDate, 'MMM dd, yyyy')}</span>
             </div>
             <div className="flex items-center gap-1">
               <Clock size={16} />
-              <span>{format(new Date(meeting.scheduledTime), 'hh:mm a')}</span>
+              <span>{timeWithZone}</span>
             </div>
           </div>
           
