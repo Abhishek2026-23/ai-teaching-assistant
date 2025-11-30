@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Video, FileText, Clock, Calendar } from 'lucide-react'
 import { Meeting, Stats } from '../types'
 import MeetingCard from '../components/MeetingCard'
 import { meetingsApi, notesApi, scheduleApi } from '../services/api'
 
 export default function Dashboard() {
+  const navigate = useNavigate()
   const [stats, setStats] = useState<Stats>({
     totalMeetings: 0,
     notesGenerated: 0,
@@ -110,19 +112,28 @@ export default function Dashboard() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition transform hover:scale-105">
+        <button 
+          onClick={() => navigate('/schedule')}
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition transform hover:scale-105"
+        >
           <div className="text-4xl mb-2">➕</div>
           <h3 className="font-semibold text-lg">Add Meeting</h3>
           <p className="text-sm opacity-90">Schedule a new session</p>
         </button>
         
-        <button className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition transform hover:scale-105">
+        <button 
+          onClick={() => navigate('/notes')}
+          className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition transform hover:scale-105"
+        >
           <div className="text-4xl mb-2">📚</div>
           <h3 className="font-semibold text-lg">View Notes</h3>
           <p className="text-sm opacity-90">Access your library</p>
         </button>
         
-        <button className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition transform hover:scale-105">
+        <button 
+          onClick={() => navigate('/meetings')}
+          className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition transform hover:scale-105"
+        >
           <div className="text-4xl mb-2">📊</div>
           <h3 className="font-semibold text-lg">Analytics</h3>
           <p className="text-sm opacity-90">Track your progress</p>
