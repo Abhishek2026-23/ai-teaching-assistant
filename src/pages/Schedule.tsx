@@ -30,14 +30,23 @@ export default function Schedule() {
 
   const handleAddMeeting = async (meeting: Omit<Meeting, 'id' | 'createdAt'>) => {
     try {
-      const newMeeting = await meetingsApi.create(meeting)
+      // Transform meetingUrl to url for backend
+      const meetingData = {
+        title: meeting.title,
+        url: meeting.meetingUrl || meeting.url,
+        scheduledTime: meeting.scheduledTime,
+        status: meeting.status || 'scheduled',
+        duration: meeting.duration || 60
+      }
+      
+      const newMeeting = await meetingsApi.create(meetingData)
       setMeetings([...meetings, newMeeting].sort((a, b) => 
         new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime()
       ))
       setIsModalOpen(false)
     } catch (err: any) {
       console.error('Failed to create meeting:', err)
-      alert('Failed to schedule meeting. Please try again.')
+      alert(`Failed to schedule meeting: ${err.response?.data?.error || err.message}`)
     }
   }
 
