@@ -37,9 +37,10 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
