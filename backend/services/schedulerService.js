@@ -12,6 +12,9 @@ export function startMeetingScheduler() {
     try {
       console.log('Checking for upcoming meetings...');
       
+      // Check for stuck meetings first
+      await checkMissedMeetings();
+      
       const now = new Date();
       const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60000);
       const tenMinutesFromNow = new Date(now.getTime() + 10 * 60000);
@@ -264,12 +267,36 @@ export async function checkMissedMeetings() {
       console.log(`Found ${missedMeetings.length} missed meetings`);
       
       for (const meeting of missedMeetings) {
-        // Mark as missed
+        // Mark as completed
         meeting.status = 'completed';
         await meeting.save();
         
         // Generate notes anyway (with sample data)
         await completeMeeting(meeting);
+      }
+    }
+    
+    // Also check for meetings stuck in "in-progress" status
+    const stuckMeetings = await Meeting.find({
+      scheduledTime: { $lt: new Date(now.getTime() - 2 * 60 * 60000) }, // 2 hours ago
+      status: 'in-progress'
+    });
+    
+    if (stuckMeetings.length > 0) {
+      console.log(`Found ${stuckMeetings.length} stuck in-progress meetings`);
+      
+      for (const meeting of stuckMeetings) {
+        console.log(`Marking as completed: ${meeting.title}`);
+        meeting.status = 'completed';
+        await meeting.save();
+        
+        // Try to generate notes if not already done
+        const Note = (await import('../models/Note.js')).default;
+        const existingNote = await Note.findOne({ meetingId: meeting._id });
+        
+        if (!existingNote) {
+          await completeMeeting(meeting);
+        }
       }
     }
   } catch (error) {

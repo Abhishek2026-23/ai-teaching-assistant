@@ -62,4 +62,43 @@ router.get('/meeting/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fix stuck meetings (mark in-progress meetings as completed)
+ */
+router.post('/fix-stuck-meetings', async (req, res) => {
+  try {
+    const now = new Date();
+    
+    // Find meetings stuck in "in-progress" that are more than 2 hours old
+    const stuckMeetings = await Meeting.find({
+      scheduledTime: { $lt: new Date(now.getTime() - 2 * 60 * 60000) },
+      status: 'in-progress'
+    });
+    
+    console.log(`Found ${stuckMeetings.length} stuck meetings`);
+    
+    const fixed = [];
+    for (const meeting of stuckMeetings) {
+      meeting.status = 'completed';
+      await meeting.save();
+      fixed.push({
+        id: meeting._id,
+        title: meeting.title,
+        scheduledTime: meeting.scheduledTime
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: `Fixed ${fixed.length} stuck meetings`,
+      meetings: fixed
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 export default router;
