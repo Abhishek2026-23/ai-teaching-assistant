@@ -36,14 +36,21 @@ const createTransporter = () => {
   
   // SMTP configuration (Brevo, SendGrid, etc.)
   if (process.env.EMAIL_SERVICE === 'smtp' && process.env.EMAIL_HOST) {
+    const port = parseInt(process.env.EMAIL_PORT || '587');
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: false, // true for 465, false for other ports
+      port: port,
+      secure: port === 465, // true for 465, false for other ports
       auth: {
         user: process.env.EMAIL_USER,
         pass: emailPassword
-      }
+      },
+      tls: {
+        rejectUnauthorized: false // Allow self-signed certificates
+      },
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 10000,
+      socketTimeout: 10000
     });
   }
   
