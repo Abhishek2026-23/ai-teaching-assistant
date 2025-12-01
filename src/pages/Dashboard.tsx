@@ -85,17 +85,17 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Welcome Header */}
-      <div className="glass-card rounded-2xl p-8 animate-slide-up">
+      <div className="mb-8 animate-slide-up">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-              Welcome back! 👋
+            <h1 className="text-4xl font-bold text-gray-900 mb-2 tracking-tight">
+              Welcome back 👋
             </h1>
-            <p className="text-gray-600">Here's what's happening with your learning today</p>
+            <p className="text-gray-500 text-lg">Here's what's happening with your learning today</p>
           </div>
           <button
             onClick={() => navigate('/schedule')}
-            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300"
+            className="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 hover:scale-105 transition-all duration-200 shadow-minimal-lg"
           >
             <Plus size={20} />
             <span className="font-medium">New Meeting</span>
@@ -110,17 +110,17 @@ export default function Dashboard() {
           return (
             <div 
               key={stat.title} 
-              className="glass-card rounded-2xl p-6 hover:scale-105 transition-all duration-300 cursor-pointer group animate-scale-in"
+              className="glass-card rounded-xl p-6 hover:shadow-minimal-lg transition-all duration-200 cursor-pointer group animate-scale-in border border-gray-100"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="flex items-start justify-between mb-4">
-                <div className={`${stat.iconBg} p-3 rounded-xl text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon size={24} />
+                <div className={`${stat.iconBg} p-2.5 rounded-lg text-white group-hover:scale-105 transition-transform duration-200`}>
+                  <Icon size={20} />
                 </div>
-                <TrendingUp size={16} className="text-green-500" />
+                <TrendingUp size={14} className="text-green-500 opacity-70" />
               </div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">{stat.title}</h3>
-              <p className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</p>
+              <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">{stat.title}</h3>
+              <p className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</p>
               <p className="text-xs text-green-600 font-medium">↗ {stat.change}</p>
             </div>
           )
@@ -131,51 +131,52 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <button 
           onClick={() => navigate('/schedule')}
-          className="glass-card rounded-2xl p-8 hover:scale-105 transition-all duration-300 group text-left"
+          className="glass-card rounded-xl p-6 hover:shadow-minimal-lg transition-all duration-200 group text-left border border-gray-100"
         >
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-            <Plus size={32} className="text-white" />
+          <div className="bg-gradient-to-r from-purple-500 to-pink-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200">
+            <Plus size={24} className="text-white" />
           </div>
-          <h3 className="font-semibold text-xl text-gray-900 mb-2">Add Meeting</h3>
-          <p className="text-sm text-gray-600">Schedule a new session</p>
+          <h3 className="font-semibold text-lg text-gray-900 mb-1">Add Meeting</h3>
+          <p className="text-sm text-gray-500">Schedule a new session</p>
         </button>
         
         <button 
           onClick={() => navigate('/notes')}
-          className="glass-card rounded-2xl p-8 hover:scale-105 transition-all duration-300 group text-left"
+          className="glass-card rounded-xl p-6 hover:shadow-minimal-lg transition-all duration-200 group text-left border border-gray-100"
         >
-          <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-            <FileText size={32} className="text-white" />
+          <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200">
+            <FileText size={24} className="text-white" />
           </div>
-          <h3 className="font-semibold text-xl text-gray-900 mb-2">View Notes</h3>
-          <p className="text-sm text-gray-600">Access your library</p>
+          <h3 className="font-semibold text-lg text-gray-900 mb-1">View Notes</h3>
+          <p className="text-sm text-gray-500">Access your library</p>
         </button>
         
         <button 
           onClick={() => navigate('/analytics')}
-          className="glass-card rounded-2xl p-8 hover:scale-105 transition-all duration-300 group text-left"
+          className="glass-card rounded-xl p-6 hover:shadow-minimal-lg transition-all duration-200 group text-left border border-gray-100"
         >
-          <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-            <TrendingUp size={32} className="text-white" />
+          <div className="bg-gradient-to-r from-green-500 to-emerald-500 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200">
+            <TrendingUp size={24} className="text-white" />
           </div>
-          <h3 className="font-semibold text-xl text-gray-900 mb-2">Analytics</h3>
-          <p className="text-sm text-gray-600">Track your progress</p>
+          <h3 className="font-semibold text-lg text-gray-900 mb-1">Analytics</h3>
+          <p className="text-sm text-gray-500">Track your progress</p>
         </button>
       </div>
 
       {/* Recent Meetings */}
-      <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="p-6 border-b border-gray-200/50">
+      <div className="glass-card rounded-xl overflow-hidden border border-gray-100">
+        <div className="p-6 border-b border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Recent Meetings</h2>
-              <p className="text-sm text-gray-600 mt-1">Your latest sessions</p>
+              <h2 className="text-xl font-bold text-gray-900">Recent Meetings</h2>
+              <p className="text-sm text-gray-500 mt-1">Your latest sessions</p>
             </div>
             <button
               onClick={() => navigate('/meetings')}
-              className="text-purple-600 hover:text-purple-700 font-medium text-sm hover:underline"
+              className="text-gray-900 hover:text-gray-700 font-medium text-sm flex items-center gap-1 group"
             >
-              View all →
+              <span>View all</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </button>
           </div>
         </div>
