@@ -101,4 +101,63 @@ router.post('/fix-stuck-meetings', async (req, res) => {
   }
 });
 
+/**
+ * Test AI notes generation
+ */
+router.post('/generate-test-notes', async (req, res) => {
+  try {
+    const { generateNotesEnhanced } = await import('../services/aiService.js');
+    
+    // Sample transcript for testing
+    const sampleTranscript = `
+      Welcome everyone to today's class on Machine Learning Fundamentals.
+      Today we'll be covering three main topics: supervised learning, unsupervised learning, and neural networks.
+      
+      First, let's discuss supervised learning. In supervised learning, we train models using labeled data.
+      The model learns from examples where we know the correct answer.
+      Common algorithms include linear regression, decision trees, and support vector machines.
+      
+      Next, unsupervised learning works with unlabeled data. The model finds patterns on its own.
+      Clustering and dimensionality reduction are key techniques here.
+      K-means clustering is a popular algorithm for grouping similar data points.
+      
+      Finally, neural networks are inspired by the human brain. They consist of layers of interconnected nodes.
+      Deep learning uses multiple hidden layers to learn complex patterns.
+      
+      For homework, please complete the following:
+      1. Read chapter 3 on supervised learning algorithms
+      2. Complete the coding assignment on linear regression
+      3. Watch the video tutorial on neural network basics
+      
+      Remember, the midterm exam is next week. Make sure to review all the topics we've covered.
+      Office hours are available on Wednesday from 2-4 PM if you need help.
+      
+      Any questions before we end today's session?
+    `;
+    
+    console.log('🧪 Testing AI notes generation...');
+    const notes = await generateNotesEnhanced(sampleTranscript, 'Test Meeting - ML Fundamentals');
+    
+    res.json({
+      success: true,
+      message: 'Notes generated successfully',
+      notes: {
+        title: notes.title,
+        summary: notes.summary,
+        keyPoints: notes.keyPoints,
+        actionItems: notes.actionItems,
+        topics: notes.topics,
+        definitions: notes.definitions
+      }
+    });
+  } catch (error) {
+    console.error('❌ Notes generation test failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      stack: error.stack
+    });
+  }
+});
+
 export default router;
