@@ -19,16 +19,17 @@ export default function Meetings() {
     try {
       setLoading(true)
       const data = await meetingsApi.getAll()
-      setMeetings(data)
+      setMeetings(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching meetings:', error)
+      setMeetings([])
     } finally {
       setLoading(false)
     }
   }
 
   const filteredMeetings = meetings.filter(meeting =>
-    meeting.title.toLowerCase().includes(searchQuery.toLowerCase())
+    meeting?.title?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const handleAddMeeting = async (meeting: Omit<Meeting, 'id' | 'createdAt'>) => {

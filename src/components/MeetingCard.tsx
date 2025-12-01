@@ -56,15 +56,17 @@ export default function MeetingCard({ meeting, onDelete }: MeetingCardProps) {
             </div>
           </div>
           
-          <a 
-            href={meeting.meetingUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1"
-          >
-            <ExternalLink size={14} />
-            <span>Join Meeting</span>
-          </a>
+          {(meeting.meetingUrl || meeting.url) && (
+            <a 
+              href={meeting.meetingUrl || meeting.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1"
+            >
+              <ExternalLink size={14} />
+              <span>Join Meeting</span>
+            </a>
+          )}
         </div>
         
         <div className="flex flex-col items-end gap-2">
