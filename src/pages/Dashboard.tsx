@@ -131,7 +131,7 @@ export default function Dashboard() {
         </button>
         
         <button 
-          onClick={() => navigate('/meetings')}
+          onClick={() => navigate('/analytics')}
           className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition transform hover:scale-105"
         >
           <div className="text-4xl mb-2">📊</div>

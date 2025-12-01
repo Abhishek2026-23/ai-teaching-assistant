@@ -8,6 +8,7 @@ import Meetings from './pages/Meetings'
 import Notes from './pages/Notes'
 import Schedule from './pages/Schedule'
 import Settings from './pages/Settings'
+import Analytics from './pages/Analytics'
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -107,6 +108,21 @@ function App() {
                 <SignedIn>
                   <Layout>
                     <Settings />
+                  </Layout>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <>
+                <SignedIn>
+                  <Layout>
+                    <Analytics />
                   </Layout>
                 </SignedIn>
                 <SignedOut>
