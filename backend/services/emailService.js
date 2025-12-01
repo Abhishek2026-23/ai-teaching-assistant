@@ -14,7 +14,7 @@ const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
  */
 async function sendEmailViaBrevo(to, subject, htmlContent, textContent) {
   try {
-    const apiKey = process.env.BREVO_API_KEY || process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS;
+    const apiKey = (process.env.BREVO_API_KEY || process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS || '').trim();
     
     if (!apiKey) {
       console.error('❌ BREVO_API_KEY not configured');
@@ -22,6 +22,7 @@ async function sendEmailViaBrevo(to, subject, htmlContent, textContent) {
     }
 
     console.log('📧 Sending email via Brevo API to:', to);
+    console.log('📧 API Key length:', apiKey.length);
     
     const response = await axios.post(
       BREVO_API_URL,
