@@ -40,18 +40,18 @@ export default function MeetingCard({ meeting, onDelete }: MeetingCardProps) {
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+    <div className="glass-card border border-gray-100 rounded-xl p-5 hover:shadow-minimal-lg transition-all duration-200 group">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-800 mb-2">{meeting.title}</h3>
+          <h3 className="font-semibold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors">{meeting.title}</h3>
           
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-            <div className="flex items-center gap-1">
-              <Calendar size={16} />
+          <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+            <div className="flex items-center gap-1.5">
+              <Calendar size={16} className="text-gray-400" />
               <span>{format(meetingDate, 'MMM dd, yyyy')}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Clock size={16} />
+            <div className="flex items-center gap-1.5">
+              <Clock size={16} className="text-gray-400" />
               <span>{timeWithZone}</span>
             </div>
           </div>
@@ -61,16 +61,16 @@ export default function MeetingCard({ meeting, onDelete }: MeetingCardProps) {
               href={meeting.meetingUrl || meeting.url} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1"
+              className="text-sm text-gray-900 hover:text-gray-700 flex items-center gap-1.5 font-medium group/link"
             >
-              <ExternalLink size={14} />
+              <ExternalLink size={14} className="group-hover/link:translate-x-0.5 transition-transform" />
               <span>Join Meeting</span>
             </a>
           )}
         </div>
         
         <div className="flex flex-col items-end gap-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[meeting.status]}`}>
+          <span className={`px-3 py-1 rounded-lg text-xs font-medium ${statusColors[meeting.status]}`}>
             {meeting.status}
           </span>
           
@@ -81,7 +81,7 @@ export default function MeetingCard({ meeting, onDelete }: MeetingCardProps) {
               className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
               title="Delete meeting"
             >
-              <Trash2 size={18} />
+              <Trash2 size={16} />
             </button>
           )}
         </div>
