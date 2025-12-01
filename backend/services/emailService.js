@@ -29,7 +29,7 @@ async function sendEmailViaBrevo(to, subject, htmlContent, textContent) {
       {
         sender: {
           name: 'AI Virtual Student',
-          email: process.env.EMAIL_USER || 'noreply@aivirtualstudent.com'
+          email: 'aiteachingassistant2000@gmail.com'
         },
         to: [{ email: to }],
         subject: subject,
